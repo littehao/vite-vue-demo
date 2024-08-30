@@ -1,0 +1,28 @@
+html,body{
+  width:100%;
+  height:100%;
+}
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+.container {  
+  position: relative;  
+  width: 400px;  
+  height: 400px;  
+  margin: auto;  
+  overflow: hidden; 
+  background-color: black;
+  border-radius: 50%;
+}  
+.circleItem {  
+  position: absolute;  
+  border-radius: 50%;  
+  background-color: red;  
+  transition: background-color 0.3s; /* 平滑的颜色过渡 */  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; /* 鼠标悬停时显示指针 */  
+}
