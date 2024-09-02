@@ -42,6 +42,7 @@ const width = 1200;
 const height = 800;
 const threeScene = ref(null);
 const tubeGroup = ref(null);
+const ctroMeshs = []; //可点击物体
 const childHoleColor = [
   "#007EC8",
   "#FCB71E",
@@ -177,6 +178,7 @@ const createTubeGroup = () => {
       const mesh = new THREE.Mesh(geometry, material);
       mesh.name = "fatherTube";
       meshs.add(mesh);
+      ctroMeshs.push(mesh);
     });
     fatherGroup.add(meshs);
   });
@@ -327,6 +329,7 @@ const createChildHole = () => {
       mesh.name = `tube${i + 1}`;
       mesh.position.set(...Object.values(positions[i]));
       cableGroup.add(mesh);
+      ctroMeshs.push(mesh);
     }
     item.add(cableGroup);
   });
@@ -368,6 +371,7 @@ const createCablefiber = () => {
         line.position.set(0, Math.cos(angle) * 6, Math.sin(angle) * 6);
         line.computeLineDistances();
         item.add(line);
+        ctroMeshs.push(line);
       }
     });
   });
@@ -380,17 +384,7 @@ const createEvent = () => {
   threeScene.value.renderer.domElement.addEventListener(
     "click",
     function (event) {
-      const cables = [];
       const fatherGroup = threeScene.value.scene.getObjectByName("fatherGroup");
-      fatherGroup.children.forEach((item) => {
-        const tubes = item.getObjectByName("fatherTube");
-        cables.push(tubes);
-        const group = item.getObjectByName("cableGroup");
-        cables.push(...group.children);
-        group.children.forEach((line) => {
-          cables.push(...line.children);
-        });
-      });
       if (!fatherGroup) return;
       // .offsetY、.offsetX以canvas画布左上角为坐标原点,单位px
       const px = event.offsetX;
@@ -405,7 +399,7 @@ const createEvent = () => {
       mouseVector.set(x, y, 0);
       raycaster.setFromCamera(mouseVector, threeScene.value.camera);
       raycaster.params.Line.threshold = 0.01;
-      const intersects = raycaster.intersectObjects(cables, false);
+      const intersects = raycaster.intersectObjects(ctroMeshs, false);
       // console.log(intersects);
       // intersects.length大于0说明，说明选中了模型
       if (
