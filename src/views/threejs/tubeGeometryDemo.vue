@@ -319,7 +319,7 @@ const createChildHole = () => {
       const path = new THREE.CatmullRomCurve3(paths[i]);
       const geometry = new THREE.TubeGeometry(path, 32, childRadius, 16, false);
       const material = new THREE.MeshLambertMaterial({
-        color: childHoleColor[i],
+        color: childHoleColor[i], //childHoleColor[i]
         wireframe: false,
         side: THREE.DoubleSide,
       });
@@ -340,7 +340,7 @@ const createCablefiber = () => {
   const angleStep = (2 * Math.PI) / fiberNum;
   const matLine = new LineMaterial({
     color: "#007EC8",
-    linewidth: 10, // in world units with size attenuation, pixels otherwise
+    linewidth: 6, // in world units with size attenuation, pixels otherwise
     worldUnits: true,
     // vertexColors: true,
     // alphaToCoverage: true,
@@ -362,7 +362,7 @@ const createCablefiber = () => {
       lineGeometry.setPositions(path);
       const line = new Line2(lineGeometry, matLine.clone());
       line.material.color.set(item.cableColor[i]);
-      line.position.set(0, Math.cos(angle) * 15, Math.sin(angle) * 15);
+      line.position.set(0, Math.cos(angle) * 6, Math.sin(angle) * 6);
       line.computeLineDistances();
       item.add(line);
     }
@@ -399,7 +399,7 @@ const createEvent = () => {
       raycaster.setFromCamera(mouseVector, threeScene.value.camera);
       raycaster.params.Line.threshold = 0.01;
       const intersects = raycaster.intersectObjects(cables, false);
-      console.log(intersects);
+      // console.log(intersects);
       // intersects.length大于0说明，说明选中了模型
       if (
         currentIntersected.value &&
@@ -478,7 +478,7 @@ onMounted(() => {
   createPlane();
   createCover();
   createChildHole();
-  // createCablefiber();
+  createCablefiber();
   createEvent();
   createCoverLabels();
   createAnimate();
