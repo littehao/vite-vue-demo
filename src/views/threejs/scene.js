@@ -1,5 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import {
+  CSS2DRenderer
+} from "three/addons/renderers/CSS2DRenderer.js";
 export default class CreateScene {
   constructor({ dom, width, height }) {
     // 场景
@@ -12,7 +15,7 @@ export default class CreateScene {
     // 相机
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
     // this.camera.position.set(8, 100, 100);
-    this.camera.position.set(-2489, 488, 1461);
+    this.camera.position.set(-2178, 1127, 1597);
     this.camera.lookAt(0, 0, 0);
     this.scene.add(this.camera);
 
@@ -35,9 +38,22 @@ export default class CreateScene {
     this.renderer.setSize(width, height);
     dom.appendChild(this.renderer.domElement);
 
+    // 创建 CSS2渲染器
+    this.css2Renderer = new CSS2DRenderer();
+    // 用法和webgl渲染器渲染方法类似
+    this.css2Renderer.render(this.scene, this.camera);
+    this.css2Renderer.setSize(width, height);
+    this.css2Renderer.domElement.style.position = 'absolute';
+    this.css2Renderer.domElement.style.top = '0px';
+    this.css2Renderer.domElement.style.left = '0px';
+    this.css2Renderer.domElement.style.pointerEvents = 'none';
+    dom.appendChild(this.css2Renderer.domElement);
+
+
     // 渲染循环
     this.renderer.setAnimationLoop(() => {
       this.renderer.render(this.scene, this.camera);
+      this.css2Renderer.render(this.scene, this.camera);
     });
 
     // 相机控件
@@ -52,6 +68,7 @@ export default class CreateScene {
     // 画布尺寸随着窗口变化
     window.addEventListener("resize", () => {
       this.renderer.setSize(width, height);
+      this.css2Renderer.setSize(width, height);
       this.camera.aspect = width / height;
       this.camera.updateProjectionMatrix();
     });
