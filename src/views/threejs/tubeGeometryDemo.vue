@@ -319,12 +319,12 @@ const createChildHole = () => {
       const path = new THREE.CatmullRomCurve3(paths[i]);
       const geometry = new THREE.TubeGeometry(path, 32, childRadius, 16, false);
       const material = new THREE.MeshLambertMaterial({
-        color: childHoleColor[i], //childHoleColor[i]
+        color: 0xdddddd, //childHoleColor[i]
         wireframe: false,
         side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(geometry, material);
-      mesh.name = `cable${i + 1}`;
+      mesh.name = `tube${i + 1}`;
       mesh.position.set(...Object.values(positions[i]));
       cableGroup.add(mesh);
     }
@@ -345,27 +345,31 @@ const createCablefiber = () => {
     // vertexColors: true,
     // alphaToCoverage: true,
   });
-  const cableGroup = threeScene.value.scene.getObjectByName("cableGroup");
-  cableGroup.children.forEach((item, index) => {
-    item.cableColor = cableColor;
-    for (let i = 0; i < fiberNum; i++) {
-      const angle = i * angleStep;
-      const path = [
-        -1200,
-        Math.cos(angle),
-        Math.sin(angle),
-        2600,
-        Math.cos(angle),
-        Math.sin(angle),
-      ];
-      const lineGeometry = new LineGeometry();
-      lineGeometry.setPositions(path);
-      const line = new Line2(lineGeometry, matLine.clone());
-      line.material.color.set(item.cableColor[i]);
-      line.position.set(0, Math.cos(angle) * 6, Math.sin(angle) * 6);
-      line.computeLineDistances();
-      item.add(line);
-    }
+  const fatherGroup = threeScene.value.scene.getObjectByName("fatherGroup");
+  fatherGroup.children.forEach((child) => {
+    const cableGroup = child.getObjectByName("cableGroup");
+    cableGroup.children.forEach((item, index) => {
+      item.cableColor = cableColor;
+      for (let i = 0; i < fiberNum; i++) {
+        const angle = i * angleStep;
+        const path = [
+          -1110,
+          Math.cos(angle),
+          Math.sin(angle),
+          2600,
+          Math.cos(angle),
+          Math.sin(angle),
+        ];
+        const lineGeometry = new LineGeometry();
+        lineGeometry.setPositions(path);
+        const line = new Line2(lineGeometry, matLine.clone());
+        line.name = "cableLine";
+        line.material.color.set(item.cableColor[i]);
+        line.position.set(0, Math.cos(angle) * 6, Math.sin(angle) * 6);
+        line.computeLineDistances();
+        item.add(line);
+      }
+    });
   });
 };
 
@@ -383,6 +387,9 @@ const createEvent = () => {
         cables.push(tubes);
         const group = item.getObjectByName("cableGroup");
         cables.push(...group.children);
+        group.children.forEach((line) => {
+          cables.push(...line.children);
+        });
       });
       if (!fatherGroup) return;
       // .offsetY、.offsetX以canvas画布左上角为坐标原点,单位px
@@ -412,7 +419,7 @@ const createEvent = () => {
         currentIntersected.value = null;
       }
       if (intersects.length > 0) {
-        if (!intersects[0].object.name.includes("cable")) return;
+        if (!intersects[0].object.name.includes("cableLine")) return;
         // 选中模型的第一个模型，设置为红色
         for (var i = 0; i < intersects.length; i++) {
           // 遍历线相交模型
