@@ -6,7 +6,7 @@ const routes = [
   {
     path: "/",
     component: LayoutIndex,
-    redirect: "/tubeGeometryDemo",
+    redirect: "/echartsmap",
     children: [
       {
         path: "/holedemo",
@@ -24,6 +24,10 @@ const routes = [
       {
         path: "/transform",
         component: () => import("../views/css3/transform.vue"),
+      },
+      {
+        path: "/echartsmap",
+        component: () => import("../views/echartsmap/index.vue"),
       },
     ],
   },
