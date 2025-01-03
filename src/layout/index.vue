@@ -17,6 +17,7 @@
           >
           <el-menu-item index="/transform">transform</el-menu-item>
           <el-menu-item index="/echartsmap">echartsmap</el-menu-item>
+          <el-menu-item index="/exportpdf">exportpdf</el-menu-item>
         </el-menu>
       </el-header>
       <el-main>
@@ -31,7 +32,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const activeIndex = ref("/echartsmap");
+const activeIndex = ref("/exportpdf");
 const handleSelect = (key, keyPath) => {
   console.log(key, keyPath);
   activeIndex.value = key;

@@ -6,7 +6,7 @@ const routes = [
   {
     path: "/",
     component: LayoutIndex,
-    redirect: "/echartsmap",
+    redirect: "/exportpdf",
     children: [
       {
         path: "/holedemo",
@@ -28,6 +28,10 @@ const routes = [
       {
         path: "/echartsmap",
         component: () => import("../views/echartsmap/index.vue"),
+      },
+      {
+        path: "/exportpdf",
+        component: () => import("../views/exportpdf/index.vue"),
       },
     ],
   },
